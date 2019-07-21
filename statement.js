@@ -27,10 +27,7 @@ function statement(invoice, plays) {
 
   for (let perf of invoice.performances) {
     //add volume credit
-    volumeCredits += Math.max(perf.audiance - 30, 0);
-
-    //each 10 comedy audiance can get extra points
-    if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audiance / 5);
+    volumeCredits += volumeCreditsFor(perf);
 
     //print this order
     result += `${playFor(perf).name}: ${format(amountFor(perf) / 100)} (${
@@ -69,6 +66,15 @@ function amountFor(aPerformance){
 
 function playFor(aPerformance){
     return plays[aPerformance.playID];
+}
+
+function volumeCreditsFor(aPerformance){
+    let result = 0;
+    result += Math.max(aPerformance.audiance - 30, 0);
+
+    //each 10 comedy audiance can get extra points
+    if ("comedy" === playFor(aPerformance).type) result += Math.floor(aPerformance.audiance / 5);
+    return result;
 }
 
 console.log(statement(invoice, plays));

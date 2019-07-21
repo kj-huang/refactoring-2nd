@@ -13,17 +13,19 @@ let invoice = {
   ]
 };
 
-function statement(invoice) {
-  let result = `Statement for ${invoice.customer}\n`;
-  for (let perf of invoice.performances) {
-    //print this order
-    result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${
-      perf.audiance
-    } seats)\n`;
-  }
-  result += `Amount owed is ${usd(totalAmounts())}\n`;
-  result += `You earned ${totalVolumeCredits()} credits\n`;
-  return result;
+function renderPlainText(invoice, plays){
+    let result = `Statement for ${invoice.customer}\n`;
+    for (let perf of invoice.performances) {
+      //print this order
+      result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${perf.audiance} seats)\n`;
+    }
+    result += `Amount owed is ${usd(totalAmounts())}\n`;
+    result += `You earned ${totalVolumeCredits()} credits\n`;
+    return result;
+}
+
+function statement(invoice, plays) {
+    return renderPlainText(invoice, plays);
 }
 
 function amountFor(aPerformance) {

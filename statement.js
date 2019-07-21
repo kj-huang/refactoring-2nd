@@ -25,12 +25,8 @@ function statement(invoice, plays) {
     totalAmount += amountFor(perf);
   }
 
-  let volumeCredits = 0;
-  for (let perf of invoice.performances) {
-    //add volume credit
-    volumeCredits += volumeCreditsFor(perf);
-  }
-
+  let volumeCredits = totalVolumeCredits();
+  
   result += `Amount owed is ${usd(totalAmount)}\n`;
   result += `You earned ${volumeCredits} credits\n`;
 
@@ -79,6 +75,15 @@ function usd(aNumber) {
     currency: "USD",
     minimumFractionDigits: 2
   }).format(aNumber / 100);
+}
+
+function totalVolumeCredits(){
+    let volumeCredits = 0;
+    for (let perf of invoice.performances) {
+      //add volume credit
+      volumeCredits += volumeCreditsFor(perf);
+    }
+    return volumeCredits;
 }
 
 console.log(statement(invoice, plays));

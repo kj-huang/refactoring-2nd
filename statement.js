@@ -72,4 +72,8 @@ function amountFor(aPerformance, play){
     return result;
 }
 
+function playFor(aPerformance){
+    return plays[aPerformance.playID];
+}
+
 console.log(statement(invoice, plays));

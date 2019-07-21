@@ -14,19 +14,15 @@ let invoice = {
 };
 
 function statement(invoice) {
-  let totalAmount = totalAmounts();
   let result = `Statement for ${invoice.customer}\n`;
-
   for (let perf of invoice.performances) {
     //print this order
     result += `${playFor(perf).name}: ${usd(amountFor(perf))} (${
       perf.audiance
     } seats)\n`;
   }
-
-  result += `Amount owed is ${usd(totalAmount)}\n`;
+  result += `Amount owed is ${usd(totalAmounts())}\n`;
   result += `You earned ${totalVolumeCredits()} credits\n`;
-
   return result;
 }
 

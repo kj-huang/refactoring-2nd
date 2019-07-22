@@ -15,13 +15,7 @@ class PerformanceCalculator {
   }
 
   get volumeCredits(){
-    let result = 0;
-    result += Math.max(this.performance.audiance - 30, 0);
-
-    //each 10 comedy audiance can get extra points
-    if ("comedy" === this.play.type)
-      result += Math.floor(this.performance.audiance / 5);
-    return result;
+    return Math.max(this.performance.audiance - 30, 0);
   }
 }
 
@@ -51,6 +45,11 @@ class ComedyCalculator extends PerformanceCalculator {
         }
         result += 300 * this.performance.audiance;
         return result;
+    }
+
+    //each 10 comedy audiance can get extra points
+    get volumeCredits(){
+        return super.volumeCredits + Math.floor(this.performance.audiance / 5);
     }
 }
 

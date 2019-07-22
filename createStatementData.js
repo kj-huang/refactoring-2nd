@@ -11,25 +11,7 @@ class PerformanceCalculator {
   }
 
   get amount(){
-    let result = 0;
-    switch (this.play.type) {
-      case "tragedy":
-        result = 40000;
-        if (this.performance.audiance > 30) {
-          result += 1000 * (this.performance.audiance - 30);
-        }
-        break;
-      case "comedy":
-        result = 30000;
-        if (this.performance.audiance > 20) {
-          result += 1000 + 500 * (this.performance.audiance - 30);
-        }
-        result += 300 * this.performance.audiance;
-        break;
-      default:
-        throw new Error(`Unknown type: ${this.play.type}`);
-    }
-    return result;
+    throw new Error(`Unknown type: ${this.play.type}`);
   }
 
   get volumeCredits(){
@@ -52,8 +34,25 @@ function createPerformanceCalculator(aPerformance, aPlay){
     }
 }
 
-class TragedyCalculator extends PerformanceCalculator {}
-class ComedyCalculator extends PerformanceCalculator {}
+class TragedyCalculator extends PerformanceCalculator {
+    get amount(){
+        let result = 40000;
+        if (this.performance.audiance > 30) {
+          result += 1000 * (this.performance.audiance - 30);
+        }
+        return result;
+    }
+}
+class ComedyCalculator extends PerformanceCalculator {
+    get amount(){
+        let result = 30000;
+        if (this.performance.audiance > 20) {
+          result += 1000 + 500 * (this.performance.audiance - 30);
+        }
+        result += 300 * this.performance.audiance;
+        return result;
+    }
+}
 
 module.exports = function createStatementData(invoice) {
   const statementData = {};

@@ -19,15 +19,6 @@ class PerformanceCalculator {
   }
 }
 
-function createPerformanceCalculator(aPerformance, aPlay){
-    switch(aPlay.type){
-        case "tragedy": return new TragedyCalculator(aPerformance, aPlay);
-        case "comedy": return new ComedyCalculator(aPerformance, aPlay);
-        default:
-            throw new Error(`Unknown type: ${this.play.type}`);
-    }
-}
-
 class TragedyCalculator extends PerformanceCalculator {
     get amount(){
         let result = 40000;
@@ -53,6 +44,15 @@ class ComedyCalculator extends PerformanceCalculator {
     }
 }
 
+function createPerformanceCalculator(aPerformance, aPlay){
+    switch(aPlay.type){
+        case "tragedy": return new TragedyCalculator(aPerformance, aPlay);
+        case "comedy": return new ComedyCalculator(aPerformance, aPlay);
+        default:
+            throw new Error(`Unknown type: ${this.play.type}`);
+    }
+}
+
 module.exports = function createStatementData(invoice) {
   const statementData = {};
   statementData.customer = invoice.customer;
@@ -72,14 +72,6 @@ module.exports = function createStatementData(invoice) {
 
   function playFor(aPerformance) {
     return plays[aPerformance.playID];
-  }
-
-  function amountFor(aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).amount;
-  }
-
-  function volumeCreditsFor(aPerformance) {
-    return new PerformanceCalculator(aPerformance, playFor(aPerformance)).volumeCredits;
   }
 
   function totalVolumeCredits(data) {

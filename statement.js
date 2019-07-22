@@ -17,36 +17,12 @@ function renderPlainText(data){
     let result = `Statement for ${data.customer}\n`;
     for (let perf of data.performances) {
       //print this order
-      result += `${perf.play.name}: ${usd(amountFor(perf))} (${perf.audiance} seats)\n`;
+      result += `${perf.play.name}: ${usd(perf.amount)} (${perf.audiance} seats)\n`;
     }
     result += `Amount owed is ${usd(totalAmounts())}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
     return result;
 
-    function amountFor(aPerformance) {
-        let result = 0;
-        switch (aPerformance.play.type) {
-          case "tragedy":
-            result = 40000;
-            if (aPerformance.audiance > 30) {
-              result += 1000 * (aPerformance.audiance - 30);
-            }
-            break;
-          case "comedy":
-            result = 30000;
-            if (aPerformance.audiance > 20) {
-              result += 1000 + 500 * (aPerformance.audiance - 30);
-            }
-            result += 300 * aPerformance.audiance;
-            break;
-          default:
-            throw new Error(`Unknown type: ${data.play.type}`);
-        }
-        return result;
-      }
-      
-      
-      
       function volumeCreditsFor(aPerformance) {
         let result = 0;
         result += Math.max(aPerformance.audiance - 30, 0);
@@ -77,7 +53,7 @@ function renderPlainText(data){
       function totalAmounts(){
           let totalAmount = 0;
           for (let perf of data.performances) {
-              totalAmount += amountFor(perf);
+              totalAmount += perf.amount;
           }
           return totalAmount;
       }
@@ -92,12 +68,35 @@ function statement(invoice) {
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
         result.play = playFor(aPerformance);
+        result.amount = amountFor(result);
         return result;
     }
 
     function playFor(aPerformance) {
         return plays[aPerformance.playID];
-      }
+    }
+
+    function amountFor(aPerformance) {
+        let result = 0;
+        switch (aPerformance.play.type) {
+          case "tragedy":
+            result = 40000;
+            if (aPerformance.audiance > 30) {
+              result += 1000 * (aPerformance.audiance - 30);
+            }
+            break;
+          case "comedy":
+            result = 30000;
+            if (aPerformance.audiance > 20) {
+              result += 1000 + 500 * (aPerformance.audiance - 30);
+            }
+            result += 300 * aPerformance.audiance;
+            break;
+          default:
+            throw new Error(`Unknown type: ${data.play.type}`);
+        }
+        return result;
+    }
 }
 
 

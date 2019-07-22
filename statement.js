@@ -13,11 +13,11 @@ let invoice = {
   ]
 };
 
-function renderPlainText(data, plays){
+function renderPlainText(data){
     let result = `Statement for ${data.customer}\n`;
     for (let perf of data.performances) {
       //print this order
-      result += `${data.name}: ${usd(amountFor(perf))} (${perf.audiance} seats)\n`;
+      result += `${perf.play.name}: ${usd(amountFor(perf))} (${perf.audiance} seats)\n`;
     }
     result += `Amount owed is ${usd(totalAmounts())}\n`;
     result += `You earned ${totalVolumeCredits()} credits\n`;
@@ -25,7 +25,7 @@ function renderPlainText(data, plays){
 
     function amountFor(aPerformance) {
         let result = 0;
-        switch (playFor(aPerformance).type) {
+        switch (aPerformance.play.type) {
           case "tragedy":
             result = 40000;
             if (aPerformance.audiance > 30) {
@@ -40,21 +40,19 @@ function renderPlainText(data, plays){
             result += 300 * aPerformance.audiance;
             break;
           default:
-            throw new Error(`Unknown type: ${playFor(aPerformance).type}`);
+            throw new Error(`Unknown type: ${data.play.type}`);
         }
         return result;
       }
       
-      function playFor(aPerformance) {
-        return plays[aPerformance.playID];
-      }
+      
       
       function volumeCreditsFor(aPerformance) {
         let result = 0;
         result += Math.max(aPerformance.audiance - 30, 0);
       
         //each 10 comedy audiance can get extra points
-        if ("comedy" === playFor(aPerformance).type)
+        if ("comedy" === aPerformance.play.type)
           result += Math.floor(aPerformance.audiance / 5);
         return result;
       }
@@ -85,18 +83,23 @@ function renderPlainText(data, plays){
       }
 }
 
-function statement(invoice, plays) {
+function statement(invoice) {
     const statementData = {};
     statementData.customer = invoice.customer;
     statementData.performances = invoice.performances.map(enrichPerformance);
-    return renderPlainText(statementData, plays);
+    return renderPlainText(statementData);
 
     function enrichPerformance(aPerformance){
         const result = Object.assign({}, aPerformance);
+        result.play = playFor(aPerformance);
         return result;
     }
+
+    function playFor(aPerformance) {
+        return plays[aPerformance.playID];
+      }
 }
 
 
 
-console.log(statement(invoice, plays));
+console.log(statement(invoice));

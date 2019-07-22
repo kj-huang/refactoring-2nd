@@ -85,20 +85,11 @@ function statement(invoice) {
   }
 
   function totalVolumeCredits(data) {
-    let volumeCredits = 0;
-    for (let perf of data.performances) {
-      //add volume credit
-      volumeCredits += perf.volumeCredits;
-    }
-    return volumeCredits;
+    return data.performances.reduce((total, p) => total + p.volumeCredits, 0);
   }
 
   function totalAmounts(data) {
-    let totalAmount = 0;
-    for (let perf of data.performances) {
-      totalAmount += perf.amount;
-    }
-    return totalAmount;
+    return data.performances.reduce((total, p) => total + p.amount, 0);
   }
 }
 
